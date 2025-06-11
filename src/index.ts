@@ -24,7 +24,7 @@ app.use(cors({ origin: true, credentials: true }));
 
 // Маршруты
 app.get('/', (_, res) => {
-  res.send('API V1.0');
+  res.send('Express API V1.0');
 });
 
 const swaggerOptions = {
@@ -35,13 +35,20 @@ const swaggerOptions = {
       version: '1.0.0',
       description: 'Документация API',
     },
-    servers: [{ url: 'http://localhost:3014' }],
+    servers: [
+      {
+        url:
+          process.env.NODE_ENV === 'production'
+            ? process.env.API_PRODUCTION_ADDRESS
+            : `http://localhost:${process.env.API_PORT}`,
+      },
+    ],
   },
   apis: ['./src/routes/*.ts', './src/index.ts'],
 };
 const swaggerSpec = swaggerJSDoc(swaggerOptions);
 
-app.use('/api/', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/api-docs/', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 import newsRoutes from './routes/news.routes.js';
 
