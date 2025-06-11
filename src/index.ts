@@ -1,7 +1,9 @@
-import express from 'express';
 import cors from 'cors';
 import https from 'https';
 import fs from 'fs';
+import express from 'express';
+import swaggerUi from 'swagger-ui-express';
+import swaggerJSDoc from 'swagger-jsdoc';
 
 import 'dotenv/config';
 
@@ -24,6 +26,22 @@ app.use(cors({ origin: true, credentials: true }));
 app.get('/', (_, res) => {
   res.send('API V1.0');
 });
+
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Express API Template',
+      version: '1.0.0',
+      description: 'Документация API',
+    },
+    servers: [{ url: 'http://localhost:3014' }],
+  },
+  apis: ['./src/routes/*.ts', './src/index.ts'],
+};
+const swaggerSpec = swaggerJSDoc(swaggerOptions);
+
+app.use('/api/', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 import newsRoutes from './routes/news.routes.js';
 
