@@ -1,120 +1,99 @@
-# Express Template
 
-> Модульный шаблон для старта backend-проекта на Node.js + Express + TypeScript
+# Express.js + TypeScript Backend Template
 
-## Возможности
-
-* Express.js (REST API)
-* TypeScript (src/, сборка через tsc)
-* Архитектура MVC (+ слои сервисов и middleware)
-* ESLint + Prettier (стили и авто-правка кода)
-* Jest (юнит-тесты)
-* Nodemon (авто-ребут при разработке)
-* .env и .env.example для переменных окружения
-* Папка jobs для крон-задач
-* Генерируемая документация API через Swagger
+Готовый шаблон для быстрого старта REST API-проекта на базе Express.js и TypeScript.  
+Включает автогенерируемую документацию через Swagger, строгую архитектуру с разделением по слоям, ESLint, Prettier и Jest для стабильной разработки.
 
 ---
 
 ## Быстрый старт
 
-1. **Установи зависимости**
+```bash
+# Клонируйте репозиторий
+git clone https://github.com/IvanTabakerka/express-template.git
+cd express-template
 
-   ```bash
-   pnpm install
-   # или npm install
-   ```
+# Установите зависимости
+pnpm install      # или npm install / yarn install
 
-2. **Скопируй переменные окружения**
+# Скопируйте переменные окружения
+cp .env.example .env
 
-   ```bash
-   cp .env.example .env
-   # Заполни .env своими параметрами
-   ```
+# Запустите в режиме разработки
+pnpm dev          # или npm run dev
 
-3. **Запусти проект в dev-режиме**
-
-   ```bash
-   pnpm dev
-   # или npm run dev
-   ```
-
-4. **Собрать и запустить в production**
-
-   ```bash
-   pnpm build
-   pnpm start
-   # или npm run build && npm start
-   ```
-
-5. **Запустить тесты**
-
-   ```bash
-   pnpm test
-   # или npm test
-   ```
+# Документация Swagger будет доступна на:
+http://localhost:3000/api-docs
+```
 
 ---
 
-## Cтруктура проекта
+## Структура проекта
 
 ```
 src/
-    index.ts             # Точка входа
-    controllers/         # Контроллеры (обработка запросов)
-    routes/              # Определение маршрутов (Express Router)
-    models/              # Модели данных
-    service/             # Бизнес-логика
-    middlewares/         # Middleware (авторизация, ошибки)
-    utils/               # Вспомогательные утилиты
-    jobs/                # Крон/планировщик задач
-    migrations/          # Миграции БД (если используются)
+  index.ts                    # Точка входа, инициализация Express и Swagger
+  controllers/
+    news.controller.ts        # Контроллеры для обработки запросов
+  jobs/
+    everyDay.jobs.ts          # Примеры фоновых задач (cron-like)
+    everyHour.jobs.ts
+    everyMinute.jobs.ts
+    index.ts
+  middlewares/
+    errorHandler.ts           # Глобальная обработка ошибок
+    notFound.ts               # Обработка несуществующих маршрутов (404)
+  models/
+    news.model.ts             # Sequelize-модель для сущности "новости"
+    index.ts                  # Экспорт моделей и инстанс подключения к БД
+  routes/
+    news.routes.ts            # Определение маршрутов для news
+  service/
+    news.service.ts           # Бизнес-логика для news
+  utils/
+    errors.ts                 # Классы и функции ошибок
 ```
 
-Остальные файлы:
+---
 
-* `.env`, `.env.example` — переменные окружения
-* `nodemon.json` — hot-reload при dev
-* `jest.config.js` — конфиг для тестов
-* `.eslintrc.json`, `.prettierrc.json` — стили и форматирование
-* `tsconfig.json` — TypeScript конфиг
+## Основные возможности
+
+- **TypeScript** — строгая типизация, автосборка и проверка кода
+- **Express.js** — популярный и гибкий фреймворк для REST API
+- **Swagger (OpenAPI)** — автогенерируемая и удобная документация API  
+  → Swagger UI доступен по `/api-docs`  
+  → JSDoc-аннотации в роутах/контроллерах
+- **Sequelize** — ORM для работы с БД
+- **ESLint + Prettier** — автоматическое форматирование и проверка качества кода
+- **Jest** — готовый юнит-тестовый фреймворк
+- **nodemon** — hot reload при разработке
+- **Гибкая архитектура** — раздельные контроллеры, сервисы, модели, роуты, middlewares, utils
+- **Примеры фоновых задач (jobs)** — можно быстро добавить крон-джобы
 
 ---
 
-## Переменные окружения
+## Скрипты
 
-Смотри `.env.example` и используй его как шаблон.
+```bash
+pnpm dev      # Запуск в режиме разработки (ts-node + nodemon)
+pnpm build    # Сборка production-кода (в папку dist)
+pnpm start    # Запуск production-кода (node dist/index.js)
+pnpm test     # Запуск unit-тестов (Jest)
+pnpm lint     # Линтинг кода (ESLint)
+```
 
 ---
-
-## Скрипты package.json
-
-* `dev` — запуск с nodemon (разработка)
-* `build` — сборка в dist/
-* `start` — запуск собранного проекта
-* `test` — запуск юнит-тестов (Jest)
-* `lint` — проверка и авто-исправление кода
 
 ## Документация API (Swagger)
 
-В шаблоне интегрирован Swagger UI для автоматической генерации и просмотра документации REST API.
-- [swagger-ui-express](https://www.npmjs.com/package/swagger-ui-express)
-- [swagger-jsdoc](https://www.npmjs.com/package/swagger-jsdoc)
+В шаблоне уже подключён Swagger UI — он автоматически собирает документацию по JSDoc-аннотациям в коде.
 
-### Как открыть документацию
+- Открывайте в браузере:  
+  [http://localhost:3000/api-docs](http://localhost:3000/api-docs)
+- Для новых маршрутов описывайте эндпоинты через JSDoc-аннотации.  
+  Swagger обновит документацию после перезапуска сервера.
 
-После запуска приложения документация доступна по адресу: 
-
-http://localhost:3000/api-docs
-
-
-### Описание
-
-Документация генерируется автоматически на основе JSDoc-аннотаций прямо в исходном коде (роутах).  
-Можно просматривать, тестировать и отправлять запросы к API прямо из веб-интерфейса.
-
-### Пример аннотации эндпоинта
-
+**Пример аннотации:**
 ```ts
 /**
  * @openapi
@@ -123,6 +102,34 @@ http://localhost:3000/api-docs
  *     summary: Получить список новостей
  *     responses:
  *       200:
- *         description: Успешно
+ *         description: Список новостей
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/News'
  */
+```
 
+---
+
+## Как расширять шаблон
+
+**Добавление новой сущности:**
+1. Создайте модель в `models/`
+2. Создайте сервис в `service/`
+3. Создайте контроллер в `controllers/`
+4. Опишите роуты в `routes/`
+5. Зарегистрируйте роуты в `src/index.ts`
+6. Добавьте JSDoc-аннотации для генерации Swagger-документации
+---
+
+## Важно знать
+
+- **Переменные окружения:**  
+  Всегда копируйте и заполняйте свой `.env` на основе `.env.example`.
+- **Сборка:**  
+  Исходники (`src/`) компилируются в папку `dist/`.
+- **Swagger:**  
+  Для генерации документации используйте JSDoc в роутах или контроллерах, путь до файлов указывается в конфиге swagger-jsdoc.
