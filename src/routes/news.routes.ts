@@ -7,6 +7,9 @@ import {
   deleteNewsController,
 } from '../controllers/news.controller.js';
 
+import { validate } from '../middlewares/validate.js';
+import { createNewsSchema, updateNewsSchema } from '../validation/news.validation.js';
+
 const router = Router();
 
 /**
@@ -121,8 +124,8 @@ const router = Router();
 
 router.get('/', getAllNewsController);
 router.get('/:id', getNewsByIdController);
-router.post('/', createNewsController);
-router.patch('/:id', updateNewsController);
+router.post('/', validate(createNewsSchema), createNewsController);
+router.patch('/:id', validate(updateNewsSchema), updateNewsController);
 router.delete('/:id', deleteNewsController);
 
 export default router;
